@@ -53,4 +53,6 @@ COPY --from=build /app .
 # and https://github.com/dotnet/dotnet-docker/discussions/4764
 USER $APP_UID
 
+COPY ["servercert.pfx", "/https/servercert.pfx"]
+
 ENTRYPOINT ["dotnet", "Flanimas---Backend.dll"]

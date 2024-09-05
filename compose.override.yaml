@@ -1,0 +1,23 @@
+services:
+  server:
+    build:
+        dockerfile: DockerfileDev
+        target: build
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://0.0.0.0:8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=flanimas
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/servercert.pfx
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - .:/app
+      - /app/obj/ 
+      - /app/bin/ 
+      - /app/Flanimas---Backend/obj/ 
+      - /app/Flanimas---Backend/bin/
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

@@ -1,28 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Flanimas___Backend.Models
+namespace Flanimas___Backend.Queries
 {
-    /// <summary>
-    ///
-    /// </summary>
-    public class MangaProgress
+    public class AddMangaQuery
     {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         /// <summary>
         /// Gets or sets the manga identifier.
         /// </summary>
         /// <value>
-        /// The manga identifier.
+        /// The anime identifier.
         /// </value>
         public int MangaId { get; set; }
 
@@ -38,7 +25,7 @@ namespace Flanimas___Backend.Models
         /// Gets or sets the current chapter.
         /// </summary>
         /// <value>
-        /// The current chapter.
+        /// The current episode.
         /// </value>
         public int CurrentChapter { get; set; }
     }

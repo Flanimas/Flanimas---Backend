@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Flanimas___Backend.Models.Identity;
 using Flanimas___Backend.Models;
 using Flanimas___Backend.Controllers;
+using Flanimas___Backend.Services;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("FlanimasContextConnection");
 builder.Services.AddDbContext<FlanimasContext>(options =>
@@ -16,6 +17,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IAnimeService, AnimeService>();
+builder.Services.AddScoped<IMangaService, MangaService>();
 
 var app = builder.Build();
 

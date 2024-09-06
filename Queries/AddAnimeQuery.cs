@@ -1,22 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Flanimas___Backend.Models
+namespace Flanimas___Backend.Queries
 {
-    /// <summary>
-    ///
-    /// </summary>
-    public class AnimeProgress
+    public class AddAnimeQuery
     {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         /// <summary>
         /// Gets or sets the anime identifier.

@@ -1,38 +1,41 @@
 ﻿using Flanimas___Backend.Models;
+using Flanimas___Backend.Models.Identity;
+using Flanimas___Backend.Queries;
+using Flanimas___Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Flanimas___Backend.Controllers
 {
     [Route("api/anime")]
     [ApiController]
     [Authorize]
-    public class AnimeController : ControllerBase
+    public class AnimeController(FlanimasContext context, IAnimeService animeService) : ControllerBase
     {
-        private readonly FlanimasContext _context;
 
-        public AnimeController(FlanimasContext context)
-        {
-            _context = context;
-        }
-
-        // GET: api/Anime
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AnimeProgress>>> GetAnimeProgress()
+        public async Task<ActionResult<IEnumerable<AnimeProgress>>> GetAnimeOfUser()
         {
-            return await _context.AnimeProgress.ToListAsync();
+            User? user = await GetUser();
+            return user!.Library.Animes.ToList();
         }
 
         // GET: api/Anime/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AnimeProgress>> GetAnimeProgress(Guid id)
         {
-            var animeProgress = await _context.AnimeProgress.FindAsync(id);
+            var animeProgress = await context.AnimeProgress.FindAsync(id);
 
             if (animeProgress == null)
             {
                 return NotFound();
+            }
+
+            if (!await IsAnimeOfUser(animeProgress))
+            {
+                return Unauthorized();
             }
 
             return animeProgress;
@@ -48,11 +51,16 @@ namespace Flanimas___Backend.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(animeProgress).State = EntityState.Modified;
+            if (!await IsAnimeOfUser(animeProgress))
+            {
+                return Unauthorized();
+            }
+
+            context.Entry(animeProgress).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -72,10 +80,12 @@ namespace Flanimas___Backend.Controllers
         // POST: api/Anime
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<AnimeProgress>> PostAnimeProgress(AnimeProgress animeProgress)
+        public async Task<ActionResult<AnimeProgress>> PostAnimeProgress(AddAnimeQuery animeQuery)
         {
-            _context.AnimeProgress.Add(animeProgress);
-            await _context.SaveChangesAsync();
+            AnimeProgress animeProgress = animeService.GetAnimeProgressFromQuery(animeQuery);
+            User? user = await GetUser();
+            user!.Library.Animes.Add(animeProgress);
+            await context.SaveChangesAsync();
 
             return CreatedAtAction("GetAnimeProgress", new { id = animeProgress.Id }, animeProgress);
         }
@@ -84,21 +94,39 @@ namespace Flanimas___Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAnimeProgress(Guid id)
         {
-            var animeProgress = await _context.AnimeProgress.FindAsync(id);
+            var animeProgress = await context.AnimeProgress.FindAsync(id);
             if (animeProgress == null)
             {
                 return NotFound();
             }
 
-            _context.AnimeProgress.Remove(animeProgress);
-            await _context.SaveChangesAsync();
+            if (!await IsAnimeOfUser(animeProgress))
+            {
+                return Unauthorized();
+            }
+
+            context.AnimeProgress.Remove(animeProgress);
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool AnimeProgressExists(Guid id)
         {
-            return _context.AnimeProgress.Any(e => e.Id == id);
+            return context.AnimeProgress.Any(e => e.Id == id);
+        }
+
+        private async Task<bool> IsAnimeOfUser(AnimeProgress anime)
+        {
+            var library = await context.Library.Where(library => library.Animes.Contains(anime)).FirstOrDefaultAsync();
+            var user = await context.Users.Where(user => user.Library.Id == library!.Id).FirstOrDefaultAsync();
+            return user?.UserName != User.FindFirstValue("Username");
+        }
+
+        private async Task<User?> GetUser()
+        {
+            String? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return await context.Users.Include(u => u.Library).ThenInclude(l => l.Animes).Where(u => u.Id == userId).FirstOrDefaultAsync();
         }
     }
 }

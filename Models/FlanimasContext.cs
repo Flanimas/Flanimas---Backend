@@ -16,12 +16,19 @@ public class FlanimasContext : IdentityDbContext<User>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        // Customize the ASP.NET Identity model and override the defaults if needed.
-        // For example, you can rename the ASP.NET Identity table names and more.
-        // Add your customizations after calling base.OnModelCreating(builder);
+        builder.Entity<Library>()
+            .HasMany(e => e.Animes)
+            .WithOne()
+            .IsRequired();
+        builder.Entity<Library>()
+            .HasMany(e => e.Mangas)
+            .WithOne()
+            .IsRequired();
     }
 
 public DbSet<Flanimas___Backend.Models.AnimeProgress> AnimeProgress { get; set; } = default!;
 
 public DbSet<Flanimas___Backend.Models.MangaProgress> MangaProgress { get; set; } = default!;
+
+public DbSet<Flanimas___Backend.Models.Library> Library { get; set; } = default!;
 }

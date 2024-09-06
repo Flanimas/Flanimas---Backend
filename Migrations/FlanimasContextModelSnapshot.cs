@@ -44,7 +44,7 @@ namespace Flanimas___Backend.Migrations
 
                     b.HasIndex("LibraryId");
 
-                    b.ToTable("AnimeProgress");
+                    b.ToTable("AnimeProgress", (string)null);
                 });
 
             modelBuilder.Entity("Flanimas___Backend.Models.Identity.User", b =>
@@ -128,7 +128,7 @@ namespace Flanimas___Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Library");
+                    b.ToTable("Library", (string)null);
                 });
 
             modelBuilder.Entity("Flanimas___Backend.Models.MangaProgress", b =>
@@ -153,7 +153,7 @@ namespace Flanimas___Backend.Migrations
 
                     b.HasIndex("LibraryId");
 
-                    b.ToTable("MangaProgress");
+                    b.ToTable("MangaProgress", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

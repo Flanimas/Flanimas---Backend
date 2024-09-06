@@ -1,11 +1,13 @@
 ﻿using Flanimas___Backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Flanimas___Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/manga")]
     [ApiController]
+    [Authorize]
     public class MangaController : ControllerBase
     {
         private readonly FlanimasContext _context;

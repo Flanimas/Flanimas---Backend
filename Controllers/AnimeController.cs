@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Flanimas___Backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Flanimas___Backend.Models;
 
 namespace Flanimas___Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/anime")]
     [ApiController]
+    [Authorize]
     public class AnimeController : ControllerBase
     {
         private readonly FlanimasContext _context;

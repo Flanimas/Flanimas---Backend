@@ -8,7 +8,7 @@ var connectionString = builder.Configuration.GetConnectionString("FlanimasContex
 builder.Services.AddDbContext<FlanimasContext>(options =>
     options.UseNpgsql(connectionString ?? throw new InvalidOperationException("Connection string 'FlanimasContext' not found.")));
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<FlanimasContext>();
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<FlanimasContext>();
 
 // Add services to the container.
 

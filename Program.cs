@@ -4,7 +4,7 @@ using Flanimas___Backend.Models.Identity;
 using Flanimas___Backend.Models;
 using Flanimas___Backend.Controllers;
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = System.Environment.GetEnvironmentVariable("DB_URL") ?? builder.Configuration.GetConnectionString("FlanimasContextConnection");
+var connectionString = builder.Configuration.GetConnectionString("FlanimasContextConnection");
 builder.Services.AddDbContext<FlanimasContext>(options =>
     options.UseNpgsql(connectionString ?? throw new InvalidOperationException("Connection string 'FlanimasContext' not found.")));
 

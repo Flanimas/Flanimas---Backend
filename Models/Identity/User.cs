@@ -10,5 +10,7 @@ namespace Flanimas___Backend.Models.Identity;
 public class User : IdentityUser
 {
     public string Username { get; set; } = "user";
+
+    public Library Library { get; set; } = new Library();
 }
 
